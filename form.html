@@ -1,0 +1,10 @@
+<h3>{{ea}}</h3>
+
+<form class="form-horizontal" role="form" method="post" action="/a/newmsg/{{ea}}">
+        <input type="text" name="subj" value="{{zubj}}" class="form-control" id="subjInput" placeholder="subj">
+            <input type="hidden" name="realjsc" id="realjsc" value="" />
+        <textarea name="msg" class="form-control" rows="6" placeholder="Текст сообщения"></textarea>
+        <input type="text" name="msgfrom" value="{{r.uname}}" class="form-control" id="exampleInput" placeholder="Подпись комментария">
+  <button type="submit" class="btn btn-default" onclick="document.getElementById('realjsc').value = '11sov71';">Отправить комментарий</button>
+</form>
+
