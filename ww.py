@@ -15,11 +15,8 @@ def qua(ea,s):
     if len(s) < 6 and s.isdigit():
         return items[-int(s):]
     else:
-        pool = []
-        for n in reversed(items):
-            if n == s: break
-            pool.insert(0,n)
-        return pool
+        if not s in items: return items
+        return items[items.index(s)+1:]
 
 def parse_echos(el):
     echos = el.split('/')
