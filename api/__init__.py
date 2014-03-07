@@ -3,7 +3,7 @@
 import json, hashlib, base64, zlib, sx
 
 def hsh(s):
-    return base64.urlsafe_b64encode( hashlib.sha256(s).digest() ).replace('-','').replace('_','')[:20]
+    return base64.urlsafe_b64encode( hashlib.sha256(s).digest() ).replace('-','A').replace('_','A')[:20]
 
 def jout(d):
     return json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '),  ensure_ascii=False)
