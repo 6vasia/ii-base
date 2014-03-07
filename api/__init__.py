@@ -1,26 +1,39 @@
 # -*- coding: utf-8 -*-
 
-import json, hashlib, base64, zlib, sx
+import hashlib, base64, zlib, sx
 
 def hsh(s):
     return base64.urlsafe_b64encode( hashlib.sha256(s).digest() ).replace('-','A').replace('_','A')[:20]
 
-def jout(d):
-    return json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '),  ensure_ascii=False)
+def _parze(msg):
+    pz = msg.splitlines()
+    mo = sx.mydict()
+    optz = pz[0].split('/')
+    mo.update( dict(zip(optz[::2],optz[1::2])) )
+    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj'),1):
+        mo[n] = pz[i]
+    mo.msg = '\n'.join(pz[8:])
+    mo.date = int(mo.date)
+    return mo
 
-def jl(msg):
-    return json.loads( msg,object_pairs_hook=sx.mydict )
+def _out(mo):
+    pz = ['','','','','','','','','']
+    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj'),1):
+        pz[i] = unicode(mo.get(n,''))
+    pz[0] = '/'.join( [x+'/'+y for (x,y) in mo.items() if x not in ('echoarea','date','msgfrom','addr','msgto','subj','msg')] )
+    return '\n'.join(pz) + mo.msg
+
 
 def get_msgs(msglist):
     out = []
     for h in msglist:
         msg = raw_msg(h)
-        if msg: out.append( jl(msg) )
+        if msg: out.append( _parze(msg) )
     return out
 
 def get_msg(msgid):
     out = get_msgs([msgid])
-    if out: return out[0]
+    return out[0] if out else sx.mydict(msg='no message',date=0)
 
 def raw_msg(h):
     try:
@@ -35,7 +48,7 @@ def raw_msgs(msglist):
     return out
 
 def new_msg(obj,rh=None):
-    s = jout(obj).encode('utf-8')
+    s = _out(obj).encode('utf-8')
     h = rh or hsh(s)
     open('msg/%s' % h,'wb').write(s)
     return h
@@ -64,7 +77,7 @@ def un_jt(txt):
 def ins_fromjt(n):
     (o,m) = un_jt(n)
     if not raw_msg(o):
-        mo = jl(m)
+        mo = get_msg(m)
         new_msg(mo,o)
         echos = [mo.echoarea] + mo.xc.split(' ')
         msg_to_echoarea(o,*echos)
