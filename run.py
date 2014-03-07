@@ -37,7 +37,7 @@ def msg_post(ea):
     mo = sx.mydict()
     for _ in ('subj', 'msg', 'msgfrom'):
         mo[_] = local.r.fz[_].decode('utf-8')
-    mo['subj']=mo['subj'].replace('\r\n','\n')
+    mo['msg']=mo['msg'].replace('\r\n','\n')
     mo.update(addr='1,1',msgto='All',echoarea=ea)
     if repto:
         mo.update(repto=repto,addr='1,2')
