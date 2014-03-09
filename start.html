@@ -36,7 +36,7 @@
 
 %for n in reversed(j):
 %mo = api.get_msg(n)
-%if not zubj and not mo.repto: zubj = 'Re: ' + mo.subj
+%if not mo.repto: zubj = 'Re: ' + mo.subj
 <a name="{{n}}"></a>
       <article class="row">
 
