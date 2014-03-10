@@ -40,26 +40,22 @@
 <a name="{{n}}"></a>
       <article class="row">
 
+
 %if mo.repto:
-
-
-<blockquote class="info-bg">
-
+<div class="box info">
     {{! sx.rend(mo.msg) }}
 <br /><br />
-<cite>
-{{mo.msgfrom}} @ <a href="#{{mo.repto}}" class="noicon">{{mo.subj}}</a>
-<div class="pull-right">
+<div align="right" class="black small">
+{{mo.msgfrom}} @ <a href="#{{mo.repto}}" class="asphalt noicon">{{mo.subj}}</a>
 <span class="icon-time"></span> {{sx.dateg(mo.date,'%d/%m %H:%M')}} UTC 
-<a href="/{{n}}"><i class="icon-eye-open red"></i></a>
-<a title="Share to Twitter" href="http://twitter.com/home?status={{r.url}}{{n}}" class="noicon"><span class="icon-twitter purple"></span></a>
+<a href="/{{n}}"><i class="icon-eye-open red"></i></a> 
+
+</div> <!-- box -->
+
 </div>
-</cite>
-</blockquote>
 
 %else:
-
-        <h3>{{mo.subj}} <small><nobr><span class="icon-time"></span> {{sx.dateg(mo.date,'%d/%m %H:%M')}} UTC <a href="/{{n}}"><i class="icon-eye-open red"></i></a> <a title="Share to Twitter" href="http://twitter.com/home?status={{r.url}}{{n}}" class="noicon"><span class="icon-twitter purple"></span></a></nobr></small> </h3>
+        <h3>{{mo.subj}} <small><nobr><span class="icon-time"></span> {{sx.dateg(mo.date,'%d/%m %H:%M')}} UTC <a href="/{{n}}"><i class="icon-eye-open red"></i></a> {{mo.msgfrom}}</nobr></small> </h3>
             <div class="box padded question large">
                 {{! sx.rend(mo.msg) }}
             </div>
