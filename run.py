@@ -5,6 +5,7 @@ import api, ww, api.sx as sx, api.flt as flt, points
 echolist = []
 
 NODE='test'
+NODEPASS=[]
 
 def load_echo():
     global echolist
@@ -69,9 +70,8 @@ def jt_echo(echos):
 
 @route('/z/in/<auth>/<jt>')
 def jt_get(auth,jt):
-    h = api.ins_fromjt(jt)
-    load_echo()
-    redirect ('/' + h)
+    if auth and auth in NODEPASS:
+        api.ins_fromjt(jt)
 
 @get('/z/in')
 def jt_drawform():
