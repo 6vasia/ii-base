@@ -72,6 +72,7 @@ def jt_echo(echos):
 def jt_get(auth,jt):
     if auth and auth in NODEPASS:
         api.ins_fromjt(jt)
+        load_echo()
 
 @get('/z/in')
 def jt_drawform():
@@ -80,10 +81,11 @@ def jt_drawform():
 @post('/z/in')
 def jt_post():
     allstart()
-    for n in local.r.fz.jt.splitlines():
-        api.ins_fromjt(n)
-    load_echo()
-    return 'uploaded'
+    if local.r.fz.auth and local.r.fz.auth in NODEPASS:
+        for n in local.r.fz.jt.splitlines():
+            api.ins_fromjt(n)
+            load_echo()
+            return 'uploaded'
 
 @route('/z/push/<pauth>/<tmsg>')
 def point_msg(pauth,tmsg):
