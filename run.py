@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from bottle import *
-import api, ww, api.sx as sx, api.flt as flt
+import api, ww, api.sx as sx, api.flt as flt, points
 echolist = []
+
+NODE='test'
 
 def load_echo():
     global echolist
@@ -14,7 +16,7 @@ load_echo()
 def allstart():
     ip=request.headers.get('X-Real-Ip') or request.environ.get('REMOTE_ADDR')
     local.r = sx.mydict(url='http://ii.51t.ru/',ua=request.headers.get('User-Agent'),ip=ip,kuk=sx.mydict(request.cookies),fz=sx.mydict(request.forms),getl=sx.mydict(request.GET))
-    local.r.uname = local.r.kuk.uname or 'guest'
+    local.r.auth = local.r.kuk.auth
 
 @route('/')
 def start_redir():
@@ -32,22 +34,24 @@ def index_list(echo,year):
 def msg_post(ea):
     allstart()
     if not flt.echo_flt(ea): return ea
-    if local.r.fz.realjsc != '11sov71' or not local.r.fz.msg or not local.r.fz.subj: return ''
+    if not local.r.fz.msg or not local.r.fz.subj: return 'empty msg'
+    ufor = request.forms.msgfrom.encode('utf-8')
+    uname, uaddr = points.check_hash(ufor or local.r.auth)
+    if not uaddr: return 'no auth'
     repto = ww.find_bysubj( local.r.fz.subj.decode('utf-8')[4:], ea )
     mo = sx.mydict()
-    for _ in ('subj', 'msg', 'msgfrom'):
+    for _ in ('subj', 'msg'):
         mo[_] = local.r.fz[_].decode('utf-8')
+    mo['msgfrom'] = uname
     mo['msg']=mo['msg'].replace('\r\n','\n')
-    mo.update(addr='1,1',msgto='All',echoarea=ea)
-    if repto:
-        mo.update(repto=repto,addr='1,2')
+    mo.update(addr='%s,%s' % (NODE,uaddr),msgto='All',echoarea=ea)
+    if repto: mo['repto']=repto
     h = ww.send_msg(mo)
     load_echo()
     redir = '/%s' % ea
     #redirect (redir)
-    ufor = request.forms.msgfrom.encode('utf-8')
-    if ufor != local.r.kuk.uname:
-        response.set_cookie('uname',ufor,path='/',max_age=7776000)
+    if ufor:
+        response.set_cookie('auth',ufor,path='/',max_age=7776000)
         return ('<html><head><meta http-equiv="refresh" content="0; %s" /></head><body></body></html>' % redir)
     else:
         redirect (redir)
@@ -83,7 +87,8 @@ def jt_post():
 
 @route('/z/push/<pauth>/<tmsg>')
 def point_msg(pauth,tmsg):
-    msgfrom, addr = pauth.split(':')
+    msgfrom, addr = points.check_hash(pauth)
+    if not addr: return 'i che eto bilo?'
     mo = api.toss(msgfrom,addr,tmsg)
     h = ww.send_msg(mo)
     load_echo()
