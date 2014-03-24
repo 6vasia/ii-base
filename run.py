@@ -90,6 +90,11 @@ def point_msg(pauth,tmsg):
     msgfrom, addr = points.check_hash(pauth)
     if not addr: return 'i che eto bilo?'
     mo = api.toss(msgfrom,addr,tmsg)
+    if mo.msg.startswith('@repto:'):
+        tmpmsg = mo.msg.splitlines()
+        mo.repto = tmpmsg[0][7:]
+        mo.msg = '\n'.join(tmpmsg[1:])
+        # а ещё лучше - засунуть это в api.toss
     h = ww.send_msg(mo)
     load_echo()
     redirect ('/' + mo.echoarea)
