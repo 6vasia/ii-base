@@ -77,7 +77,7 @@ def un_jt(txt):
 def ins_fromjt(n):
     (o,m) = un_jt(n)
     if not raw_msg(o):
-        mo = get_msg(m)
+        mo = _parze(m)
         new_msg(mo,o)
         echos = [mo.echoarea] + mo.xc.split(' ')
         msg_to_echoarea(o,*echos)
