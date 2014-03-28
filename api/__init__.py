@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import hashlib, base64, zlib, sx
+from flt import echo_flt
 
 def hsh(s):
     return base64.urlsafe_b64encode( hashlib.sha256(s).digest() ).replace('-','A').replace('_','A')[:20]
@@ -77,8 +78,9 @@ def ins_fromjt(n):
     (o,m) = un_jt(n)
     if not raw_msg(o):
         mo = _parze(m)
-        new_msg(mo,o)
-        msg_to_echoarea(o,mo.echoarea)
+        if echo_flt(mo.echoarea):
+            new_msg(mo,o)
+            msg_to_echoarea(o,mo.echoarea)
     return o
 
 def parse_jt(dta):
@@ -86,6 +88,7 @@ def parse_jt(dta):
         ins_fromjt(n)
 
 def toss(msgfrom,addr,tmsg):
-    lines = zlib.decompress(base64.urlsafe_b64decode(tmsg)).decode('utf-8').splitlines()
-    mo = sx.mydict(date=sx.gts(),msgfrom=msgfrom,addr=addr,echoarea=lines[0],msgto=lines[1],subj=lines[2],msg='\n'.join(lines[4:]))
-    return mo
+    if echo_flt(lines[0]):
+        lines = zlib.decompress(base64.urlsafe_b64decode(tmsg)).decode('utf-8').splitlines()
+        mo = sx.mydict(date=sx.gts(),msgfrom=msgfrom,addr=addr,echoarea=lines[0],msgto=lines[1],subj=lines[2],msg='\n'.join(lines[4:]))
+        return mo

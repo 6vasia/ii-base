@@ -23,6 +23,11 @@ def allstart():
 def start_redir():
     redirect(echolist[0][0])
 
+@route('/list.txt')
+def list_txt():
+    response.set_header ('content-type','text/plain; charset=utf-8')
+    return '\n'.join(['%s:%s:' % t for t in echolist])
+
 @route('/<echo>.<year:int>')
 def index_list(echo,year):
     allstart()
@@ -92,6 +97,7 @@ def point_msg(pauth,tmsg):
     msgfrom, addr = points.check_hash(pauth)
     if not addr: return 'i che eto bilo?'
     mo = api.toss(msgfrom,addr,tmsg)
+    if not mo: return 'bad echoarea or bad something else!'
     if mo.msg.startswith('@repto:'):
         tmpmsg = mo.msg.splitlines()
         mo.repto = tmpmsg[0][7:]

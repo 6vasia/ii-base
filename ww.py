@@ -5,9 +5,10 @@ import api, api.sx as sx, os
 def send_msg(tags):
     mo = sx.mydict(date=sx.gts())
     mo.update(**tags)
-    h = api.new_msg(mo)
-    api.msg_to_echoarea(h,tags.echoarea)
-    return h
+    if api.echo_flt(tags.echoarea):
+        h = api.new_msg(mo)
+        api.msg_to_echoarea(h,tags.echoarea)
+        return h
 
 def qua(ea,s):
     items =  api.get_echoarea(ea)
