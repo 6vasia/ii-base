@@ -88,7 +88,7 @@ def parse_jt(dta):
         ins_fromjt(n)
 
 def toss(msgfrom,addr,tmsg):
+    lines = zlib.decompress(base64.urlsafe_b64decode(tmsg)).decode('utf-8').splitlines()
     if echo_flt(lines[0]):
-        lines = zlib.decompress(base64.urlsafe_b64decode(tmsg)).decode('utf-8').splitlines()
         mo = sx.mydict(date=sx.gts(),msgfrom=msgfrom,addr=addr,echoarea=lines[0],msgto=lines[1],subj=lines[2],msg='\n'.join(lines[4:]))
         return mo
