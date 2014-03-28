@@ -41,11 +41,6 @@
                 {{! sx.rend(mo.msg) }}
             </div>
 <div align="right" class="medium"><strong><a href="/{{mo.echoarea}}#{{mo.msgid}}">{{mo.echoarea}}</a></strong> 
-%if mo.xc:
-%for _ in mo.xc.split(' '):
-<a href="/{{_}}#{{mo.msgid}}">{{_}}</a></strong> 
-%end
-%end
 
 from: <strong>{{mo.msgfrom}}</strong> ({{mo.addr}}) to: <strong>{{mo.msgto}}</strong></div>
 <hr />

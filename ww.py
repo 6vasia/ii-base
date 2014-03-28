@@ -6,8 +6,7 @@ def send_msg(tags):
     mo = sx.mydict(date=sx.gts())
     mo.update(**tags)
     h = api.new_msg(mo)
-    to = [tags.echoarea] + tags.xc.split(' ')
-    api.msg_to_echoarea(h,*to)
+    api.msg_to_echoarea(h,tags.echoarea)
     return h
 
 def qua(ea,s):

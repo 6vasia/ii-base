@@ -62,9 +62,8 @@ def get_echoarea(name):
 def echoarea_count(name):
     return len(get_echoarea(name))
 
-def msg_to_echoarea(msgid,*echoarea):
-    for name in echoarea:
-        if name: open('echo/%s' % name,'ab').write(msgid + '\n')
+def msg_to_echoarea(msgid,echoarea):
+    if echoarea: open('echo/%s' % echoarea,'ab').write(msgid + '\n')
 
 
 def mk_jt(mh,mb):
@@ -79,8 +78,7 @@ def ins_fromjt(n):
     if not raw_msg(o):
         mo = _parze(m)
         new_msg(mo,o)
-        echos = [mo.echoarea] + mo.xc.split(' ')
-        msg_to_echoarea(o,*echos)
+        msg_to_echoarea(o,mo.echoarea)
     return o
 
 def parse_jt(dta):
@@ -89,7 +87,5 @@ def parse_jt(dta):
 
 def toss(msgfrom,addr,tmsg):
     lines = zlib.decompress(base64.urlsafe_b64decode(tmsg)).decode('utf-8').splitlines()
-    echos = lines[0].split(' ',1)
-    mo = sx.mydict(date=sx.gts(),msgfrom=msgfrom,addr=addr,echoarea=echos[0],msgto=lines[1],subj=lines[2],msg='\n'.join(lines[4:]))
-    if len(echos) > 1: mo.update(xc=echos[1])
+    mo = sx.mydict(date=sx.gts(),msgfrom=msgfrom,addr=addr,echoarea=lines[0],msgto=lines[1],subj=lines[2],msg='\n'.join(lines[4:]))
     return mo
