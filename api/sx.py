@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import time, bottle, re
+import time, bottle, re, base64, hashlib
+from splitparser import sp
 
 class mydict(dict):
     def __getattr__(self, key):
@@ -12,6 +13,8 @@ class mydict(dict):
     def __sub__(self, key):
         return mydict((k,v) for (k,v) in self.items() if k != key)
 
+def hsh(s):
+    return base64.urlsafe_b64encode( hashlib.sha256(s).digest() ).replace('-','A').replace('_','z')[:20]
 
 def datef(d,f):
     return time.strftime(f, time.localtime(int(d)))
@@ -27,5 +30,16 @@ def gts():
 
 def rend(txt):
     out = bottle.html_escape(txt)
-    r1 = re.compile(r"(\b(http|https)://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))")
-    return r1.sub(r'<a href="\1">\1</a>',out).replace('\n', '<br />')
+    out = sp(out)
+#    r1 = re.compile(r"(\b(http|https)://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))")
+#    out = r1.sub(r'<a href="\1">\1</a>',out)
+#    r2 = re.compile(r"(\b(ii)://([-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]))")
+#    out = r2.sub(r'<a href="\3"><span class="success radius label">\3</span></a>',out)
+    return out.replace('\n', '<br />')
+
+def g_opts(*n):
+    opts = []
+    for i in n:
+        if i[1]: opts.append('%s=%s' % i)
+    if opts: return '?' + '&'.join(opts)
+    else: return ''

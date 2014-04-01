@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import hashlib, base64, zlib, sx
-from flt import echo_flt
-
-def hsh(s):
-    return base64.urlsafe_b64encode( hashlib.sha256(s).digest() ).replace('-','A').replace('_','A')[:20]
+import base64, zlib, sx, flt
 
 def _parze(msg):
     pz = msg.splitlines()
@@ -37,31 +33,40 @@ def get_msg(msgid):
     return out[0] if out else sx.mydict(msg='no message',date=0)
 
 def raw_msg(h):
+    if not flt.msg_flt(h): return ''
     try:
         return open('msg/%s' % h).read().decode('utf-8')
     except:
         return ''
 
-def raw_msgs(msglist):
-    out = []
-    for h in msglist:
-        out.append( raw_msg(h) )
-    return out
-
 def new_msg(obj,rh=None):
     s = _out(obj).encode('utf-8')
-    h = rh or hsh(s)
-    open('msg/%s' % h,'wb').write(s)
-    return h
+    h = rh or sx.hsh(s)
+    if len(s) < 65536:
+        open('msg/%s' % h,'wb').write(s)
+        return h
 
 def get_echoarea(name):
+    if not flt.echo_flt(name): return []
     try:
         return open('echo/%s' % name).read().splitlines()
     except:
-        return ''
+        return []
+
+def echoareas(names):
+    out = ''
+    for ea in names:
+        out += ea + '\n'
+        ge = get_echoarea(ea)
+        if ge: out += '\n'.join(ge) + '\n'
+    return out
 
 def echoarea_count(name):
     return len(get_echoarea(name))
+
+def load_echo():
+    echoareas = open('list.txt').read().splitlines()
+    return [(x,echoarea_count(x)) for x in echoareas]
 
 def msg_to_echoarea(msgid,echoarea):
     if echoarea: open('echo/%s' % echoarea,'ab').write(msgid + '\n')
@@ -78,7 +83,7 @@ def ins_fromjt(n):
     (o,m) = un_jt(n)
     if not raw_msg(o):
         mo = _parze(m)
-        if echo_flt(mo.echoarea):
+        if flt.echo_flt(mo.echoarea) and len(mo.msg) < 65536:
             new_msg(mo,o)
             msg_to_echoarea(o,mo.echoarea)
     return o
@@ -89,6 +94,14 @@ def parse_jt(dta):
 
 def toss(msgfrom,addr,tmsg):
     lines = zlib.decompress(base64.urlsafe_b64decode(tmsg)).decode('utf-8').splitlines()
-    if echo_flt(lines[0]):
+    if flt.echo_flt(lines[0]):
         mo = sx.mydict(date=sx.gts(),msgfrom=msgfrom,addr=addr,echoarea=lines[0],msgto=lines[1],subj=lines[2],msg='\n'.join(lines[4:]))
         return mo
+
+def mkmsg(obj,rh=None):
+    if not flt.echo_flt(obj.echoarea): return
+    if rh and not flt.msg_flt(rh): return
+    h = new_msg(obj,rh)
+    if h:
+        msg_to_echoarea(h,obj.echoarea)
+        return h

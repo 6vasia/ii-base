@@ -1,1 +1,1 @@
-PYTHONDONTWRITEBYTECODE=True python run.py dev
+PYTHONDONTWRITEBYTECODE=True python run.py
