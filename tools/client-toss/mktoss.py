@@ -1,4 +1,4 @@
-import sys, zlib, base64
+import sys, base64
 
 for f in sys.argv[1:]:
     tx = open(f).read()
