@@ -5,7 +5,7 @@ from api.bottle import *
 
 def allstart():
     ip=request.headers.get('X-Real-Ip') or request.environ.get('REMOTE_ADDR')
-    local.r = sx.mydict(url='http://%s.ru/' % YOURURL,ua=request.headers.get('User-Agent'),ip=ip,kuk=sx.mydict(request.cookies),fz=sx.mydict(request.forms),getl=sx.mydict(request.GET),NODE=NODE)
+    local.r = sx.mydict(ua=request.headers.get('User-Agent'),ip=ip,kuk=sx.mydict(request.cookies),fz=sx.mydict(request.forms),getl=sx.mydict(request.GET),NODE=NODE)
     local.r.auth = local.r.kuk.auth
 
 def _msg(o,ml):
@@ -31,8 +31,9 @@ def start_page():
 @route('/rss/<echo>.<year:int>')
 @route('/rss/<echo>.<year:int>/<num:int>')
 def rss_echo(echo,year,num=50):
+    cfg = api.load_echo(True)
     response.set_header('content-type','application/rss+xml; charset=utf-8')
-    return rssg.gen_rss('%s.%s' % (echo, year),YOURURL,num)
+    return rssg.gen_rss('%s.%s' % (echo, year),cfg[0][0],num)
 
 @route('/reply/<ea>/<repto>')
 def index_list(ea,repto):

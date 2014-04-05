@@ -7,7 +7,6 @@ II_PATH=os.path.dirname(__file__) or '.'
 TEMPLATE_PATH.insert(0,II_PATH)
 
 NODE='unnamed'
-YOURURL='51t.ru'
 
 @route('/list.txt')
 def list_txt():
@@ -62,6 +61,6 @@ def get_echolist(echoarea):
     return api.get_echoarea(echoarea,True)
 
 import tpl
-tpl.YOURURL = YOURURL; tpl.NODE = NODE; tpl.II_PATH=II_PATH
+tpl.NODE = NODE; tpl.II_PATH=II_PATH
 
 run(host='127.0.0.1',port=62220,debug=False)
