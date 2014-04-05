@@ -6,8 +6,6 @@ from api.bottle import *
 II_PATH=os.path.dirname(__file__) or '.'
 TEMPLATE_PATH.insert(0,II_PATH)
 
-NODE='unnamed'
-
 @route('/list.txt')
 def list_txt():
     response.set_header ('content-type','text/plain; charset=utf-8')
@@ -27,7 +25,8 @@ def index_list(names):
 def _point_msg(pauth,tmsg):
     msgfrom, addr = points.check_hash(pauth)
     if not addr: return 'auth error!'
-    mo = api.toss(msgfrom,'%s,%s' % (NODE,addr),tmsg)
+    cfg = api.load_echo(False)
+    mo = api.toss(msgfrom,'%s,%s' % (cfg[0][1],addr),tmsg)
     if mo.msg.startswith('@repto:'):
         tmpmsg = mo.msg.splitlines()
         mo.repto = tmpmsg[0][7:]
@@ -61,6 +60,6 @@ def get_echolist(echoarea):
     return api.get_echoarea(echoarea,True)
 
 import tpl
-tpl.NODE = NODE; tpl.II_PATH=II_PATH
+tpl.II_PATH=II_PATH
 
 run(host='127.0.0.1',port=62220,debug=False)

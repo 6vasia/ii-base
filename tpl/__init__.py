@@ -5,7 +5,7 @@ from api.bottle import *
 
 def allstart():
     ip=request.headers.get('X-Real-Ip') or request.environ.get('REMOTE_ADDR')
-    local.r = sx.mydict(ua=request.headers.get('User-Agent'),ip=ip,kuk=sx.mydict(request.cookies),fz=sx.mydict(request.forms),getl=sx.mydict(request.GET),NODE=NODE)
+    local.r = sx.mydict(ua=request.headers.get('User-Agent'),ip=ip,kuk=sx.mydict(request.cookies),fz=sx.mydict(request.forms),getl=sx.mydict(request.GET))
     local.r.auth = local.r.kuk.auth
 
 def _msg(o,ml):
@@ -38,6 +38,8 @@ def rss_echo(echo,year,num=50):
 @route('/reply/<ea>/<repto>')
 def index_list(ea,repto):
     allstart()
+    cfg = api.load_echo()
+    local.r.NODE = cfg[0][1]
     if repto and repto != '-': 
         local.r.repto = repto
         local.r.rmsg = api.get_msg(repto)
@@ -57,6 +59,7 @@ def index_list(echo,year):
 @post('/a/newmsg/<ea>')
 def msg_post(ea):
     allstart()
+    cfg = api.load_echo(False)
     ufor = request.forms.msgfrom.encode('utf-8')
     if not flt.echo_flt(ea): return ea
     if not local.r.fz.msg or not local.r.fz.subj: return local.r.fz.subj
@@ -67,7 +70,7 @@ def msg_post(ea):
             mo[_] = local.r.fz[_].decode('utf-8')
         mo['msgfrom'] = uname
         mo['msg']=mo['msg'].replace('\r\n','\n')
-        mo.update(addr='%s,%s' % (NODE, uaddr),msgto=request.forms.msgto,echoarea=ea)
+        mo.update(addr='%s,%s' % (cfg[0][1], uaddr),msgto=request.forms.msgto,echoarea=ea)
         h = api.point_newmsg(mo)
         if not h: return 'bad message'
     else:
