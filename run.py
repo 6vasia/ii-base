@@ -3,7 +3,7 @@
 import api,points
 from api.bottle import *
 
-II_PATH=os.path.dirname(__file__)
+II_PATH=os.path.dirname(__file__) or '.'
 TEMPLATE_PATH.insert(0,II_PATH)
 
 NODE='unnamed'
