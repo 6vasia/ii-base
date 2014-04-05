@@ -3,6 +3,9 @@
 import api,points
 from api.bottle import *
 
+II_PATH=os.path.dirname(__file__)
+TEMPLATE_PATH.insert(0,II_PATH)
+
 NODE='unnamed'
 YOURURL='51t.ru'
 
@@ -59,7 +62,6 @@ def get_echolist(echoarea):
     return api.get_echoarea(echoarea,True)
 
 import tpl
-tpl.YOURURL = YOURURL
-tpl.NODE = NODE
+tpl.YOURURL = YOURURL; tpl.NODE = NODE; tpl.II_PATH=II_PATH
 
 run(host='127.0.0.1',port=62220,debug=False)

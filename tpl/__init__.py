@@ -89,7 +89,7 @@ def show_my_hash():
 
 @route('/s/<filename:path>')
 def new_style(filename):
-    return static_file(filename,root='./s')
+    return static_file(filename,root='%s/s' % II_PATH)
 
 
 @route('/data/<msgid>')
