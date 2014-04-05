@@ -39,7 +39,7 @@
             <!-- Left Nav Section --> 
         <ul class="left"> 
             <li class="divider"></li>
-            <li><a href="/rss/{{r.ea}}/50" title="RSS-лента"><i class="fa fa-fw fa-rss"></i></a></li>
+            <li><a href="/rss/{{r.ea}}" title="RSS-лента"><i class="fa fa-fw fa-rss"></i></a></li>
             <li class="divider"></li>
             <li class="has-form"><a class="button radius" href="/reply/{{r.ea}}/-" title="Написать новое сообщение в эту эху">
                 <i class="fa fa-plus-circle"></i> NEW</a>

@@ -29,7 +29,7 @@ def start_page():
 
 @route('/rss/<echo>.<year:int>')
 @route('/rss/<echo>.<year:int>/<num:int>')
-def rss_echo(echo,year,num=0):
+def rss_echo(echo,year,num=50):
     response.set_header('content-type','application/rss+xml; charset=utf-8')
     return rssg.gen_rss('%s.%s' % (echo, year),YOURURL,num)
 
