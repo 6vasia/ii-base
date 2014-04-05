@@ -46,6 +46,14 @@ def get_echoarea(name,raw=False):
     except:
         return '' if raw else []
 
+def get_echoarea_f(name):
+    bl = set(ru('blacklist.txt').split())
+    return [x for x in get_echoarea(name) if x not in bl]
+
+#def get_echoarea_f(name,limit=0):
+#    bl = set(ru('blacklist.txt').splitlines())
+#    lst = [x for x in get_echoarea(name) if x not in bl][-limit]
+
 def echoareas(names):
     out = ''
     for ea in names:
