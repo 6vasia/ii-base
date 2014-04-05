@@ -23,7 +23,7 @@ def _out(mo):
     pz = ['','','','','','','','','']
     for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj'),1):
         pz[i] = unicode(mo.get(n,''))
-    pz[0] = '/'.join( [x+'/'+y for (x,y) in [('ii','ok')] + mo.items() if x not in ('echoarea','date','msgfrom','addr','msgto','subj','msg')] )
+    pz[0] = '/'.join( [x+'/'+y for (x,y) in [('ii','ok')] + mo.items() if x not in ('echoarea','date','msgfrom','addr','msgto','subj','msg') and y] )
     return '\n'.join(pz) + mo.msg
 
 def ru(fn):
