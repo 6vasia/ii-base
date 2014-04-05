@@ -2,14 +2,11 @@
 
 import base64, zlib, sx, flt
 
-def b64c(s,us):
-    if us: return base64.b64encode(s)
-    else: return base64.urlsafe_b64encode(zlib.compress(s))
+def b64c(s):
+    return base64.b64encode(s)
 
-def b64d(s,us):
-    cnt = base64.b64decode( s.replace('-','+').replace('_','/') )
-    if us: return cnt
-    else: return zlib.decompress(cnt)
+def b64d(s):
+    return base64.b64decode( s.replace('-','+').replace('_','/') )
 
 def _parze(msg):
     pz = msg.splitlines()
@@ -60,18 +57,18 @@ def load_echo():
     return [(x,echoarea_count(x)) for x in echoareas]
 
 
-def mk_jt(mh,mb,us=True):
-    return mh + ':' + b64c(mb.encode('utf-8'),us)
+def mk_jt(mh,mb):
+    return mh + ':' + b64c(mb.encode('utf-8'))
 
-def parse_jt(dta,us=True):
+def parse_jt(dta):
     for n in dta.splitlines():
         o,m = txt.split(':',1)
         if not raw_msg(o):
-            mo = _parze( b64d(m,us) )
+            mo = _parze( b64d(m) )
             mkmsg(mo,o)
 
-def toss(msgfrom,addr,tmsg,us=True):
-    lines = b64d(tmsg,us).decode('utf-8').splitlines()
+def toss(msgfrom,addr,tmsg):
+    lines = b64d(tmsg).decode('utf-8').splitlines()
     if flt.echo_flt(lines[0]):
         mo = sx.mydict(date=sx.gts(),msgfrom=msgfrom,addr=addr,echoarea=lines[0],msgto=lines[1],subj=lines[2],msg='\n'.join(lines[4:]))
         return mo

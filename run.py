@@ -11,23 +11,21 @@ def list_txt():
     response.set_header ('content-type','text/plain; charset=utf-8')
     return '\n'.join(['%s:%s:' % t for t in api.load_echo()])
 
-@route('/<qp:re:z|u>/m/<h:path>')
-def jt_outmsg(qp,h):
+@route('/u/m/<h:path>')
+def jt_outmsg(h):
     response.set_header ('content-type','text/plain; charset=iso-8859-1')
-    us = True if qp == 'u' else False
     lst = [x for x in h.split('/') if len(x) == 20]
-    return '\n'.join( [api.mk_jt(x,api.raw_msg(x),us) for x in lst] )
+    return '\n'.join( [api.mk_jt(x,api.raw_msg(x)) for x in lst] )
 
 @route('/u/e/<names:path>')
-@route('/z/e/<names:path>')
 def index_list(names):
     response.set_header ('content-type','text/plain; charset=utf-8')
     return api.echoareas(names.split('/'))
 
-def _point_msg(pauth,tmsg,qp):
+def _point_msg(pauth,tmsg):
     msgfrom, addr = points.check_hash(pauth)
     if not addr: return 'auth error!'
-    mo = api.toss(msgfrom,'%s,%s' % (NODE,addr),tmsg,True if qp == 'u' else False)
+    mo = api.toss(msgfrom,'%s,%s' % (NODE,addr),tmsg)
     if mo.msg.startswith('@repto:'):
         tmpmsg = mo.msg.splitlines()
         mo.repto = tmpmsg[0][7:]
@@ -42,13 +40,13 @@ def _point_msg(pauth,tmsg,qp):
     else:
         return 'msg big!'
 
-@route('/<qp:re:z|u>/point/<pauth>/<tmsg>')
-def point_msg_get(qp,pauth,tmsg):
-    return _point_msg(pauth,tmsg,qp)
+@route('/u/point/<pauth>/<tmsg>')
+def point_msg_get(pauth,tmsg):
+    return _point_msg(pauth,tmsg)
 
-@post('/<qp:re:z|u>/point')
-def point_msg_get(qp):
-    return _point_msg(request.POST['pauth'],request.POST['tmsg'],qp)
+@post('/u/point')
+def point_msg_get():
+    return _point_msg(request.POST['pauth'],request.POST['tmsg'])
 
 @route('/m/<msg>')
 def get_msg(msg):
