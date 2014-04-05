@@ -28,9 +28,10 @@ def start_page():
     return template('tpl/index.html',r=local.r,lst=lst)
 
 @route('/rss/<echo>.<year:int>')
-def rss_echo(echo,year):
+@route('/rss/<echo>.<year:int>/<num:int>')
+def rss_echo(echo,year,num=0):
     response.set_header('content-type','application/rss+xml; charset=utf-8')
-    return rssg.gen_rss('%s.%s' % (echo, year),YOURURL)
+    return rssg.gen_rss('%s.%s' % (echo, year),YOURURL,num)
 
 @route('/reply/<ea>/<repto>')
 def index_list(ea,repto):
