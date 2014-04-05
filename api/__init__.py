@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import base64, zlib, sx, flt
+import base64, sx, flt
 
 def b64c(s):
     return base64.b64encode(s)
