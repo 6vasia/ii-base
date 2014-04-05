@@ -12,7 +12,7 @@ YOURURL='51t.ru'
 @route('/list.txt')
 def list_txt():
     response.set_header ('content-type','text/plain; charset=utf-8')
-    return '\n'.join(['%s:%s:' % t for t in api.load_echo()])
+    return '\n'.join(['%s:%s:%s' % t for t in api.load_echo(False)[1:]])
 
 @route('/u/m/<h:path>')
 def jt_outmsg(h):

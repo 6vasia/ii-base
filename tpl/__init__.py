@@ -23,7 +23,8 @@ def _msg(o,ml):
 @route('/')
 def start_page():
     allstart()
-    lst=[(e,api.get_echoarea_f(e)) for e,c in api.load_echo()]
+    cfg = api.load_echo(True)
+    lst=[(e,api.get_echoarea_f(e)) for e,c,d in cfg[1:]]
     local.r.page_title = u'ii : ваше домашнее фидо'
     return template('tpl/index.html',r=local.r,lst=lst)
 
@@ -48,7 +49,8 @@ def index_list(echo,year):
     allstart()
     ea = '%s.%s' % (echo,year)
     if not flt.echo_flt(ea): return ea
-    local.r.update(page_title=ea,echolist=api.load_echo(),ea=ea)
+    cfg = api.load_echo(False)
+    local.r.update(page_title=ea,echolist=cfg[1:],ea=ea)
     return template('tpl/echoarea.html',r=local.r,j=api.get_echoarea_f(ea))
 
 @post('/a/newmsg/<ea>')

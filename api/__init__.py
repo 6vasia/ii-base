@@ -63,9 +63,13 @@ def echoareas(names):
 def echoarea_count(name):
     return len(get_echoarea(name))
 
-def load_echo():
-    echoareas = open('list.txt').read().splitlines()
-    return [(x,echoarea_count(x)) for x in echoareas]
+def load_echo(filter_star=False):
+    lst = [x.split(' ',1) for x in open('server.cfg').read().splitlines()]
+    if filter_star:
+        elst = [(x,echoarea_count(x),y) for (x,y) in lst[1:] if not x.startswith('*')]
+    else:
+        elst = [(x.lstrip('*'),echoarea_count(x),y) for (x,y) in lst[1:]]
+    return [tuple(lst[0])] + elst
 
 
 def mk_jt(mh,mb):
