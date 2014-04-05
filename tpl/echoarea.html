@@ -54,7 +54,7 @@
 
     </div>
     <div class="small-2 columns">
-        <a href="/reply/{{r.ea}}/{{n}}"><img title="Кликни, чтобы ответить на это сообщение" src="http://ave.51t.ru/girl/width/120/hash/{{sx.hsh(mo.msgfrom.encode('utf-8'))}}" style="border-radius:8px" /></a>
+%include tpl/repbtn.tpl ea=r.ea, n=n, msgfrom=mo.msgfrom.encode('utf-8')
     </div>
 
 </div> <!-- row -->
