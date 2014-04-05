@@ -26,10 +26,13 @@ def _out(mo):
     pz[0] = '/'.join( [x+'/'+y for (x,y) in [('ii','ok')] + mo.items() if x not in ('echoarea','date','msgfrom','addr','msgto','subj','msg')] )
     return '\n'.join(pz) + mo.msg
 
+def ru(fn):
+    try: return open(fn).read().decode('utf-8')
+    except: return ''
+
 def raw_msg(h):
     if not flt.msg_flt(h): return ''
-    try: return open('msg/%s' % h).read().decode('utf-8')
-    except: return ''
+    return ru('msg/%s' % h)
 
 def get_msg(h):
     txt = raw_msg(h)
