@@ -91,16 +91,6 @@ def show_my_hash():
 def new_style(filename):
     return static_file(filename,root='%s/s' % II_PATH)
 
-
-@route('/data/<msgid>')
-def data_render(msgid):
-    mo = api.get_msg(msgid)
-    if mo.subj.startswith('bindata::'):
-        response.set_header ('content-type', mo.subj[9:].strip())
-        return api.b64d( mo.msg, True )
-    else:
-        return 'no data'
-
 @route('/q/<msglst:path>')
 def msg_qpage(msglst):
     return _msg('lst',msglst)

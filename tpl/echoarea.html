@@ -47,11 +47,7 @@
             <span class="pull-right">
             <strong title="{{mo.addr}}">{{mo.msgfrom}}</strong> to {{mo.msgto}} <a href="/{{n}}" title="Ссылка на это сообщение"><i class="fa fa-eye"></i></a></p>
 
-%if mo.subj.startswith('bindata::'):
-        <a class="alert button" href="/data/{{n}}">{{mo.subj}}</a>
-%else:
             <p>{{! sx.rend(mo.msg) }}</p>
-%end
         </div>
 
     </div>
