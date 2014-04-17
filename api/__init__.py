@@ -106,7 +106,14 @@ def mkmsg(obj,rh=None):
         open('echo/%s' % obj.echoarea,'ab').write(h + '\n')
         return h
 
+def _filter_msg_call(tags):
+    try:
+        import filter_msg
+        return filter_msg.check(tags)
+    except:
+        return True
+
 def point_newmsg(tags):
     mo = sx.mydict(date=sx.gts())
     mo.update(**tags)
-    return mkmsg(mo)
+    if _filter_msg_call(tags): return mkmsg(mo)
