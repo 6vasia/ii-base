@@ -5,7 +5,7 @@ from api.bottle import *
 
 def allstart():
     ip=request.headers.get('X-Real-Ip') or request.environ.get('REMOTE_ADDR')
-    local.r = sx.mydict(ua=request.headers.get('User-Agent'),ip=ip,kuk=sx.mydict(request.cookies),fz=sx.mydict(request.forms),getl=sx.mydict(request.GET))
+    local.r = sx.mydict(ua=request.headers.get('User-Agent'),ip=ip,kuk=sx.mydict(request.cookies),fz=sx.mydict(request.POST),getl=sx.mydict(request.GET))
     local.r.auth = local.r.kuk.auth
 
 def _msg(o,ml):
@@ -58,16 +58,16 @@ def index_list(echo,year):
 
 @post('/a/newmsg/<ea>')
 def msg_post(ea):
-    allstart()
+    allstart(); fz = local.r.fz
     cfg = api.load_echo(False)
     ufor = request.forms.msgfrom.encode('utf-8')
     if not flt.echo_flt(ea): return ea
-    if not local.r.fz.msg or not local.r.fz.subj: return local.r.fz.subj
+    if not fz.msg or not fz.subj: return 'empty msg or subj'
     uname, uaddr = points.check_hash(ufor or local.r.auth)
     if uaddr:
         mo = sx.mydict()
         for _ in ('subj', 'msg', 'repto'):
-            mo[_] = local.r.fz[_].decode('utf-8')
+            mo[_] = fz[_].decode('utf-8')
         mo['msgfrom'] = uname
         mo['msg']=mo['msg'].replace('\r\n','\n')
         mo.update(addr='%s,%s' % (cfg[0][1], uaddr),msgto=request.forms.msgto,echoarea=ea)
@@ -75,7 +75,7 @@ def msg_post(ea):
         if not h: return 'bad message'
     else:
         return 'no auth'
-    redir = local.r.fz.goback or '/%s' % ea
+    redir = fz.goback or '/%s' % ea
     if ufor:
         response.set_cookie('auth',ufor,path='/',max_age=7776000)
         return ('<html><head><meta http-equiv="refresh" content="0; %s" /></head><body></body></html>' % redir)
