@@ -94,6 +94,11 @@ def show_my_hash():
     allstart()
     return local.r.auth
 
+@route('/h/<page>')
+def show_custom_page(page):
+    allstart()
+    return template('pages/%s.pge' % page,r=local.r)
+
 @route('/s/<filename:path>')
 def new_style(filename):
     return static_file(filename,root='%s/s' % II_PATH)
