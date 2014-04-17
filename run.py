@@ -50,7 +50,7 @@ def _point_msg(pauth,tmsg):
     else:
         return 'msg big!'
 
-@route('/u/point/<pauth>/<tmsg>')
+@route('/u/point/<pauth>/<tmsg:path>')
 def point_msg_get(pauth,tmsg):
     return _point_msg(pauth,tmsg)
 
