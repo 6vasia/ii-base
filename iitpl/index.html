@@ -1,6 +1,6 @@
 %import api, api.sx as sx
 
-%include tpl/01.tpl r=r
+%include iitpl/01.tpl r=r
 
 <body>
 <div class="row">
@@ -38,7 +38,7 @@
         </div>
     </div>
     <div class="small-2 columns">
-%include tpl/repbtn.tpl ea=ea, n=n[-1], msgfrom=mo.msgfrom.encode('utf-8')
+%include iitpl/repbtn.tpl ea=ea, n=n[-1], msgfrom=mo.msgfrom.encode('utf-8')
     </div>
 %end
 </div>

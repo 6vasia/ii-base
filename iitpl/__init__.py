@@ -17,7 +17,7 @@ def _msg(o,ml):
     elif o == 'lst':
         lst=[api.get_msg(n) + {'msgid':n} for n in ml.split('/')]
         local.r.page_title = u'Список сообщений'
-    return template('tpl/msg.html',lst=[mo] if o != 'lst' else lst,r=local.r)
+    return template('iitpl/msg.html',lst=[mo] if o != 'lst' else lst,r=local.r)
 
 
 @route('/')
@@ -26,7 +26,7 @@ def start_page():
     cfg = api.load_echo(True)
     lst=[(e,api.get_echoarea_f(e)) for e,c,d in cfg[1:]]
     local.r.page_title = u'ii : ваше домашнее фидо'
-    return template('tpl/index.html',r=local.r,lst=lst)
+    return template('iitpl/index.html',r=local.r,lst=lst)
 
 @route('/rss/<echo>.<year:int>')
 @route('/rss/<echo>.<year:int>/<num:int>')
@@ -45,7 +45,7 @@ def index_list(ea,repto):
         local.r.rmsg = api.get_msg(repto)
     if not flt.echo_flt(ea): return ea
     local.r.page_title = u'message to ' + ea
-    return template('tpl/mform.html',r=local.r,ea=ea)
+    return template('iitpl/mform.html',r=local.r,ea=ea)
 
 @route('/<echo>.<year:int>')
 def index_list(echo,year):
@@ -54,7 +54,7 @@ def index_list(echo,year):
     if not flt.echo_flt(ea): return ea
     cfg = api.load_echo(False)
     local.r.update(page_title=ea,echolist=cfg[1:],ea=ea)
-    return template('tpl/echoarea.html',r=local.r,j=api.get_echoarea_f(ea))
+    return template('iitpl/echoarea.html',r=local.r,j=api.get_echoarea_f(ea))
 
 @post('/a/newmsg/<ea>')
 def msg_post(ea):
