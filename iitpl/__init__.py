@@ -52,7 +52,7 @@ def index_list(echo,year):
     allstart()
     ea = '%s.%s' % (echo,year)
     if not flt.echo_flt(ea): return ea
-    cfg = api.load_echo(False)
+    cfg = api.load_echo(True)
     local.r.update(page_title=ea,echolist=cfg[1:],ea=ea)
     return template('iitpl/echoarea.html',r=local.r,j=api.get_echoarea_f(ea))
 
