@@ -63,7 +63,7 @@ def msg_post(ea):
     ufor = request.forms.msgfrom.encode('utf-8')
     if not flt.echo_flt(ea): return ea
     if not fz.msg or not fz.subj: return 'empty msg or subj'
-    uname, uaddr = points.check_hash(ufor or local.r.auth)
+    uname, uaddr = points.check_hash(ufor)
     if uaddr:
         mo = sx.mydict()
         for _ in ('subj', 'msg', 'repto'):
@@ -76,7 +76,7 @@ def msg_post(ea):
     else:
         return 'no auth'
     redir = fz.goback or '/%s' % ea
-    if ufor:
+    if ufor != local.r.auth:
         response.set_cookie('auth',ufor,path='/',max_age=7776000)
         return ('<html><head><meta http-equiv="refresh" content="0; %s" /></head><body></body></html>' % redir)
     else:
