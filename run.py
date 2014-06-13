@@ -22,7 +22,7 @@ def blacklist_txt():
 
 @route('/u/m/<h:path>')
 def jt_outmsg(h):
-    response.set_header ('content-type','text/plain; charset=iso-8859-1')
+    response.set_header ('content-type','text/plain; charset=utf-8')
     lst = [x for x in h.split('/') if len(x) == 20]
     return '\n'.join( [api.mk_jt(x,api.raw_msg(x)) for x in lst] )
 
