@@ -3,7 +3,11 @@
 import re
 import sys
 
+_cfg = {}
+
 def config(filename):
+    if (_cfg):
+        return _cfg
     try:
         ret = {}
         dic = {}
@@ -25,7 +29,7 @@ def config(filename):
                     dic[kvmatch.group(1)] = kvmatch.group(2)
         if (section and dic):
             ret[section] = dic
-        return ret
-    except:
-        print sys.exc_info()
+        _cfg = ret
+        return _cfg
+    except IOError:
         return None
