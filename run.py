@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import api,points
+import xapi
 from api.bottle import *
 
 II_PATH=os.path.dirname(__file__) or '.'
@@ -67,6 +68,13 @@ def get_msg(msg):
 def get_echolist(echoarea):
     response.set_header ('content-type','text/plain; charset=utf-8')
     return api.get_echoarea(echoarea,True)
+
+# === extended API ===
+
+@route('/x/mtime/<echoareas:path>')
+def get_mtime(echoareas):
+    response.set_header ('content-type','text/plain; charset=utf-8')
+    return xapi.get_mtime(echoareas.split('/'))
 
 import iitpl
 iitpl.II_PATH=II_PATH
