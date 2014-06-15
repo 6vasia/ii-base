@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import api,points
-import xapi
+import api.x
 from api.bottle import *
 
 II_PATH=os.path.dirname(__file__) or '.'
@@ -10,16 +10,12 @@ TEMPLATE_PATH.insert(0,II_PATH)
 @route('/list.txt')
 def list_txt():
     response.set_header ('content-type','text/plain; charset=utf-8')
-    lst = api.load_echo(False)[1:]
-    if request.query.n:
-        return '\n'.join([t[0] for t in lst])
-    else:
-        return '\n'.join(['%s:%s:%s' % t for t in lst])
+    return 'deprecated'
 
 @route('/blacklist.txt')
 def blacklist_txt():
     response.set_header ('content-type','text/plain; charset=utf-8')
-    return api.ru('blacklist.txt')
+    return 'deprecated'
 
 @route('/u/m/<h:path>')
 def jt_outmsg(h):
@@ -74,7 +70,7 @@ def get_echolist(echoarea):
 @route('/x/mtime/<echoareas:path>')
 def get_mtime(echoareas):
     response.set_header ('content-type','text/plain; charset=utf-8')
-    return xapi.get_mtime(echoareas.split('/'))
+    return api.x.get_mtime(echoareas.split('/'))
 
 import iitpl
 iitpl.II_PATH=II_PATH
