@@ -6,8 +6,8 @@ import sys
 _cfg = {}
 
 def config(filename):
-    if (_cfg):
-        return _cfg
+    if (_cfg.get(filename)):
+        return _cfg[filename]
     try:
         ret = {}
         dic = {}
@@ -29,7 +29,7 @@ def config(filename):
                     dic[kvmatch.group(1)] = kvmatch.group(2)
         if (section and dic):
             ret[section] = dic
-        _cfg = ret
-        return _cfg
+        _cfg[filename] = ret
+        return ret
     except IOError:
         return None

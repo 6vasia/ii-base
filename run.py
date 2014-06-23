@@ -6,6 +6,9 @@ from api.bottle import *
 
 II_PATH=os.path.dirname(__file__) or '.'
 TEMPLATE_PATH.insert(0,II_PATH)
+CONFIG='server.cfg'
+api.CONFIG = CONFIG
+
 
 @route('/list.txt')
 def list_txt():
@@ -31,8 +34,8 @@ def index_list(names):
 def _point_msg(pauth,tmsg):
     msgfrom, addr = points.check_hash(pauth)
     if not addr: return 'auth error!'
-    cfg = api.load_echo(False)
-    mo = api.toss(msgfrom,'%s,%s' % (cfg[0][1],addr),tmsg.strip())
+    cfg = config('_server.cfg')
+    mo = api.toss(msgfrom,'%s,%s' % (cfg['server']['address'],addr),tmsg.strip())
     if mo.msg.startswith('@repto:'):
         tmpmsg = mo.msg.splitlines()
         mo.repto = tmpmsg[0][7:]
@@ -67,12 +70,18 @@ def get_echolist(echoarea):
 
 # === extended API ===
 
-@route('/x/mtime/<echoareas:path>')
+@route('/x/t/<echoareas:path>')
 def get_mtime(echoareas):
     response.set_header ('content-type','text/plain; charset=utf-8')
-    return api.x.get_mtime(echoareas.split('/'))
+    arealist = echoareas.split('+')
+    arealist_legacy = echoareas.split('/')
+    if len(arealist) > len(arealist_legacy):
+        return api.x.get_mtime(arealist)
+    else:
+        return api.x.get_mtime(arealist_legacy)
 
 import iitpl
 iitpl.II_PATH=II_PATH
+iitpl.CONFIG = CONFIG
 
 run(host='127.0.0.1',port=62220,debug=False)
