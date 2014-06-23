@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import base64, sx, flt
+from config import config
+
+CONFIG = ''
 
 def b64c(s):
     return base64.b64encode(s)
@@ -72,12 +75,12 @@ def _g(l):
             yield x[0], ''
 
 def load_echo(filter_star=False):
-    lst = [x for x in _g(open('server.cfg').read().splitlines())]
+    lst = config(CONFIG)['areas']
     if filter_star:
-        elst = [(x,echoarea_count(x),y) for (x,y) in lst[1:] if not x.startswith('*')]
+        elst = [(x,echoarea_count(x),y) for (x,y) in lst.items() if not x.startswith('*')]
     else:
-        elst = [(x.lstrip('*'),echoarea_count(x),y) for (x,y) in lst[1:]]
-    return [tuple(lst[0])] + elst
+        elst = [(x.lstrip('*'),echoarea_count(x),y) for (x,y) in lst.items()]
+    return elst
 
 
 def mk_jt(mh,mb):

@@ -2,6 +2,9 @@
 
 import api, api.sx as sx, api.flt as flt, points, rssg
 from api.bottle import *
+from config import config
+
+CONFIG = ''
 
 def allstart():
     ip=request.headers.get('X-Real-Ip') or request.environ.get('REMOTE_ADDR')
@@ -23,23 +26,23 @@ def _msg(o,ml):
 @route('/')
 def start_page():
     allstart()
-    cfg = api.load_echo(True)
-    lst=[(e,api.get_echoarea_f(e)) for e,c,d in cfg[1:]]
+    cfg = config(CONFIG)
+    lst=[(e,api.get_echoarea_f(e)) for e in cfg['areas'].keys()]
     local.r.page_title = u'ii : ваше домашнее фидо'
     return template('iitpl/index.html',r=local.r,lst=lst)
 
 @route('/rss/<echo>.<year:int>')
 @route('/rss/<echo>.<year:int>/<num:int>')
 def rss_echo(echo,year,num=50):
-    cfg = api.load_echo(True)
+    cfg = config(CONFIG)
     response.set_header('content-type','application/rss+xml; charset=utf-8')
-    return rssg.gen_rss('%s.%s' % (echo, year),cfg[0][0],num)
+    return rssg.gen_rss('%s.%s' % (echo, year),cfg['server']['hostname'],num)
 
 @route('/reply/<ea>/<repto>')
 def index_list(ea,repto):
     allstart()
-    cfg = api.load_echo()
-    local.r.NODE = cfg[0][1]
+    cfg = config(CONFIG)
+    local.r.NODE = cfg['server']['address']
     if repto and repto != '-': 
         local.r.repto = repto
         local.r.rmsg = api.get_msg(repto)
@@ -52,14 +55,14 @@ def index_list(echo,year):
     allstart()
     ea = '%s.%s' % (echo,year)
     if not flt.echo_flt(ea): return ea
-    cfg = api.load_echo(True)
-    local.r.update(page_title=ea,echolist=cfg[1:],ea=ea)
+    elist = api.load_echo(True)
+    local.r.update(page_title=ea,echolist=elist,ea=ea)
     return template('iitpl/echoarea.html',r=local.r,j=api.get_echoarea_f(ea))
 
 @post('/a/newmsg/<ea>')
 def msg_post(ea):
     allstart(); fz = local.r.fz
-    cfg = api.load_echo(False)
+    cfg = config(CONFIG)
     ufor = request.forms.msgfrom.encode('utf-8')
     if not flt.echo_flt(ea): return ea
     if not fz.msg or not fz.subj: return 'empty msg or subj'
@@ -70,7 +73,7 @@ def msg_post(ea):
             mo[_] = fz[_].decode('utf-8')
         mo['msgfrom'] = uname
         mo['msg']=mo['msg'].replace('\r\n','\n')
-        mo.update(addr='%s,%s' % (cfg[0][1], uaddr),msgto=request.forms.msgto,echoarea=ea)
+        mo.update(addr='%s,%s' % (cfg['server']['address'], uaddr),msgto=request.forms.msgto,echoarea=ea)
         h = api.point_newmsg(mo)
         if not h: return 'bad message'
     else:
