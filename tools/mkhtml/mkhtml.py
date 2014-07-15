@@ -15,8 +15,8 @@ def _parz(msg):
     mo = dict()
     optz = pz[0].split('/')
     mo.update( dict(zip(optz[::2],optz[1::2])) )
-    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj'),1):
-        mo[n] = pz[i]
+    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj')):
+        mo[n] = pz[i+1]
     mo['msg'] = '\n'.join(pz[8:])
     mo['date'] = int(mo['date'])
     return mo

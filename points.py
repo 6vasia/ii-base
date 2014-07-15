@@ -13,9 +13,9 @@ def save_point(phash,u):
 
 def check_hash(s):
     p = open('points.txt').read().splitlines()
-    for i,n in enumerate(p,1):
+    for i,n in enumerate(p):
         ud = n.split(':',1)
-        if ud[0] == s: return ud[1].decode('utf-8'),i
+        if ud[0] == s: return ud[1].decode('utf-8'),i+1
     return '', None
 
 if __name__ == '__main__':

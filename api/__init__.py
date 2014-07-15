@@ -16,16 +16,16 @@ def _parze(msg):
     mo = sx.mydict()
     optz = pz[0].split('/')
     mo.update( dict(zip(optz[::2],optz[1::2])) )
-    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj'),1):
-        mo[n] = pz[i]
+    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj')):
+        mo[n] = pz[i+1]
     mo.msg = '\n'.join(pz[8:])
     mo.date = int(mo.date)
     return mo
 
 def _out(mo):
     pz = ['','','','','','','','','']
-    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj'),1):
-        pz[i] = unicode(mo.get(n,''))
+    for i,n in enumerate(('echoarea','date','msgfrom','addr','msgto','subj')):
+        pz[i+1] = unicode(mo.get(n,''))
     pz[0] = '/'.join( [x+'/'+y for (x,y) in [('ii','ok')] + mo.items() if x not in ('echoarea','date','msgfrom','addr','msgto','subj','msg') and y] )
     return '\n'.join(pz) + mo.msg
 
